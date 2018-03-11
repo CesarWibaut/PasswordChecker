@@ -1,0 +1,51 @@
+<!doctype HTML>
+<html>
+	<head>
+		<title>Projet sécurité</title>
+		<meta charset="utf-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		<style>
+		.jumbotron {
+			background-color:#000000;
+			color: #aaaaaa;
+		}
+		canvas {
+			text-center:align;
+		}
+		</style>
+		<div class="jumbotron text-center">
+			<h1>Testez la sécurité de votre mot de passe !</h1>
+			<p>Projet de sécurité par Elodie Martel et César Wibaut</p>
+			<form class="form-inline">
+			<div class="input-group">
+			   <input id='textfield' type="text" class="form-control" size="50" placeholder="Mot de passe" required>
+			   <div class="input-group-btn">
+					<button id='analyser' type="button" class="btn btn-danger">Tester !</button> -->
+				</div>
+			</div>
+		</form><br>
+		<button id='masquer' type="button" class="btn btn-danger">Masquer le mot de passe</button>
+		</div>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-sm-4">
+					<canvas id='canvas' width=652 height=200></canvas>
+				</div>
+				<div class="col-lg-8">
+					<blockquote class="blockquote-reverse">
+						<h2>Votre score est de :</h2>
+						<h2 id='score'>Vous n'avez pas encore testé !</h2>
+					</blockquote>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script src="pwdAnalyse.js"></script>
+	<script src="buttons.js"></script>
+	<script src="canvas.js"></script>
+</html>
