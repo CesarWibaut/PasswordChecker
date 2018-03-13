@@ -1,6 +1,5 @@
 $('#analyser').click(function(event){
 	if($('#textfield').val()!=""){
-		console.log("Analyse");
 		analyse($('#textfield').val());
 	}
 });

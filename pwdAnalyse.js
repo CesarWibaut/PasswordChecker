@@ -1,6 +1,6 @@
 var pwd="";
 
-
+var scoreAjax=0;
 var advice = new Array();
 
 advice.push("Mot de passe trop court !");
@@ -8,19 +8,20 @@ advice.push("Pas assez de majuscule !");
 advice.push("Pas assez de minuscule !");
 advice.push("Pas assez de nombre !");
 advice.push("Pas assez de symbole !");
-advice.push("N'utilisez pas uniquement des lettres !");
-advice.push("N'utilisez pas uniquement des nombres !");
-advice.push("Essayez de ne pas faire de répétition !");
-advice.push("Pas trop de majuscules consécutives !");
-advice.push("Pas trop de minuscules consécutives !");
-advice.push("Pas trop de nombres consécutifs !");
+advice.push("Uniquement des lettres !");
+advice.push("Uniquement des nombres !");
+advice.push("Trop de répétition !");
+advice.push("Trop de majuscules consécutives !");
+advice.push("Trop de minuscules consécutives !");
+advice.push("Trop de nombres consécutifs !");
+advice.push("<strong>Votre mot de passe est souvent utilisé !</strong>");
 
 var problems = new Array();
 
 function analyse(mdp){
 	var score=0;
 	pwd=mdp;
-	
+	scoreAjax=0;
 	
 	score+=nbChar();
 	score+=isMaj();
@@ -33,12 +34,11 @@ function analyse(mdp){
 	score-=consecutiveMaj();
 	score-=consecutiveMin();
 	score-=consecutiveNumber()
-	score = score/10;
-	if(score >10) score = 10;
-	if(score < 0) score = 0;
-	draw((score));
-	$('#score').html("<h1><strong>"+score+"/10</strong></h1>");
-	problems=new Array();
+	doRequest(score);
+	// $.when(doRequest()).done(function(){
+		// score -= scoreAjax;
+	// });
+	
 }
 
 function nbChar(){
@@ -79,7 +79,6 @@ function isNumber(){
 		var letter = pwd.substring(i,i+1);
 		if(letter >= "0" && letter <= "9"){
 			number++;
-			console.log(number);
 		}
 	}
 	if(number < 1)
@@ -111,7 +110,6 @@ function lettresSeules(){
 
 function nombresSeuls(){
 	if(isSymbol()>0 || isMaj()>0 || isMin()>0){
-		console.log("ça marche ez");
 		return 0;
 	}
 	problems.push(6);
@@ -192,4 +190,30 @@ function consecutiveNumber(){
 	if(res > 3)
 		problems.push(10);
 	return res*3;
+}
+
+function doRequest(score){
+	$.ajax({
+		url: "https://api.pwnedpasswords.com/pwnedpassword/"+pwd,
+		timeout: 2000,
+		success :function(data){
+			problems.push(11);
+			score =0;
+			finAnalyse(score);
+		},
+		error : function(one, two, three){
+			finAnalyse(score);
+		}
+	});
+
+}
+
+
+function finAnalyse(score){
+	score = score/10;
+	if(score >10) score = 10;
+	if(score < 0) score = 0;
+	draw((score));
+	$('#score').html("<h1><strong>"+score+"/10</strong></h1>");
+	problems=new Array();
 }
