@@ -1,5 +1,22 @@
 var pwd="";
 
+
+var advice = new Array();
+
+advice.push("Mot de passe trop court !");
+advice.push("Pas assez de majuscule !");
+advice.push("Pas assez de minuscule !");
+advice.push("Pas assez de nombre !");
+advice.push("Pas assez de symbole !");
+advice.push("N'utilisez pas uniquement des lettres !");
+advice.push("N'utilisez pas uniquement des nombres !");
+advice.push("Essayez de ne pas faire de répétition !");
+advice.push("Pas trop de majuscules consécutives !");
+advice.push("Pas trop de minuscules consécutives !");
+advice.push("Pas trop de nombres consécutifs !");
+
+var problems = new Array();
+
 function analyse(mdp){
 	var score=0;
 	pwd=mdp;
@@ -20,10 +37,13 @@ function analyse(mdp){
 	if(score >10) score = 10;
 	if(score < 0) score = 0;
 	draw((score));
-	$('#score').html("<h1>"+score+"/10</h1>");
+	$('#score').html("<h1><strong>"+score+"/10</strong></h1>");
+	problems=new Array();
 }
 
 function nbChar(){
+	if(pwd.length < 5)
+		problems.push(0);
 	return pwd.length*5;
 }
 
@@ -35,7 +55,9 @@ function isMaj(){
 			if(letter >= "A" && letter <="Z") upper++;
 		}
 	}
-	return (pwd.length-upper)*2;
+	if(upper < 1)
+		problems.push(1);
+	return (pwd.length-upper)*3;
 }
 
 function isMin(){
@@ -46,6 +68,8 @@ function isMin(){
 			if(letter >= "a" && letter <="z") lower++;
 		}
 	}
+	if(lower < 3)
+		problems.push(2);
 	return (pwd.length-lower)*2;
 }
 
@@ -58,6 +82,8 @@ function isNumber(){
 			console.log(number);
 		}
 	}
+	if(number < 1)
+		problems.push(3);
 	return number*4;
 }
 
@@ -71,18 +97,24 @@ function isSymbol(){
 			}
 		}
 	}
-	return res*6;
+	if(res < 1)
+		problems.push(4);
+	return res*7;
 }
 
 function lettresSeules(){
 	if(isSymbol() >0 || isNumber()>0)
 		return 0;
+	problems.push(5);
 	return pwd.length;
 }
 
 function nombresSeuls(){
-	if(isSymbol()>0 || isMaj()>0 || isMin()>0)
+	if(isSymbol()>0 || isMaj()>0 || isMin()>0){
+		console.log("ça marche ez");
 		return 0;
+	}
+	problems.push(6);
 	return pwd.length;
 }
 
@@ -101,6 +133,8 @@ function repetitionChar(){
 			res+=v;
 		}
 	}
+	if(res > 3)
+		problems.push(7);
 	return res*3;
 }
 
@@ -119,6 +153,8 @@ function consecutiveMaj(){
 			}
 		}
 	}
+	if(res > 2)
+		problems.push(8);
 	return res*3;
 }
 
@@ -136,6 +172,8 @@ function consecutiveMin(){
 			}
 		}
 	}
+	if(res > 3)
+		problems.push(9);
 	return res*3;
 }
 
@@ -151,5 +189,7 @@ function consecutiveNumber(){
 			}
 		}
 	}
+	if(res > 3)
+		problems.push(10);
 	return res*3;
 }

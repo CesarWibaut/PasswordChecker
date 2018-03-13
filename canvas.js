@@ -3,8 +3,18 @@ var ctx = canvas.getContext("2d");
 ctx.strokeRect(50,50, 600,50);
 
 function draw(score){
+	problems.sort();
+	var problemsSolved = new Array();
+	for(var r = 0; r<problems.length; r++){
+		if(!problemsSolved.includes(problems[r])) problemsSolved.push(problems[r]);
+	}
+	var allAdvice = "<h3><strong>Conseils :</strong></h3><br>";
+	for(var r = 0 ; r<problemsSolved.length; r++){
+		allAdvice += "<h4>"+advice[problemsSolved[r]] + "<h4>";
+	}
+	$("#problems").html(allAdvice);
+	
 	reset();
-	console.log(score);
 	ctx.fillStyle="#FF0000";
 	if(score > 2.5)
 		ctx.fillStyle="#F47200";
@@ -13,7 +23,6 @@ function draw(score){
 	if(score >=8)
 		ctx.fillStyle="#00FF00";
 		
-	console.log(ctx.fillStyle);
 	x=(score/10)*600;
 	ctx.fillRect(50,50,x,50);
 	ctx.strokeRect(50,50, 600,50);
