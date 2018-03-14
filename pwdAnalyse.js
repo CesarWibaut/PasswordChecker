@@ -1,8 +1,9 @@
 var pwd="";
 
-var scoreAjax=0;
 var advice = new Array();
-
+/*
+	Tableau contenant les conseils
+*/
 advice.push("Mot de passe trop court !");
 advice.push("Pas assez de majuscule !");
 advice.push("Pas assez de minuscule !");
@@ -18,10 +19,12 @@ advice.push("<strong>Votre mot de passe est souvent utilisé !</strong>");
 
 var problems = new Array();
 
+
+/* Fonction créant le score en fonction de différents facteurs */
+
 function analyse(mdp){
 	var score=0;
 	pwd=mdp;
-	scoreAjax=0;
 	
 	score+=nbChar();
 	score+=isMaj();
@@ -35,18 +38,19 @@ function analyse(mdp){
 	score-=consecutiveMin();
 	score-=consecutiveNumber()
 	doRequest(score);
-	// $.when(doRequest()).done(function(){
-		// score -= scoreAjax;
-	// });
 	
 }
 
+
+/* Vérifie le nombre de caractère */
 function nbChar(){
 	if(pwd.length < 5)
 		problems.push(0);
 	return pwd.length*5;
 }
 
+
+/* Vérifie la présence de majuscules */
 function isMaj(){
 	var upper=0;
 	for(var i = 0 ; i < pwd.length; i++){
@@ -60,6 +64,7 @@ function isMaj(){
 	return (pwd.length-upper)*3;
 }
 
+/* Vérifie la présence de minuscules */
 function isMin(){
 	var lower=0;
 	for(var i = 0 ; i < pwd.length; i++){
@@ -73,6 +78,8 @@ function isMin(){
 	return (pwd.length-lower)*2;
 }
 
+/* Vérifie la présence de nombres */
+
 function isNumber(){
 	var number=0;
 	for(var i = 0 ; i < pwd.length; i++){
@@ -85,6 +92,8 @@ function isNumber(){
 		problems.push(3);
 	return number*4;
 }
+
+/* Vérifie la présence de symboles spéciaux */
 
 function isSymbol(){
 	var res=0;
@@ -101,12 +110,18 @@ function isSymbol(){
 	return res*7;
 }
 
+
+/* Vérifie si le mot de passe est constitué uniquement de lettres */
+
+
 function lettresSeules(){
 	if(isSymbol() >0 || isNumber()>0)
 		return 0;
 	problems.push(5);
 	return pwd.length;
 }
+
+/* Vérifie si le mot de passe est constitué uniquement de nombres */
 
 function nombresSeuls(){
 	if(isSymbol()>0 || isMaj()>0 || isMin()>0){
@@ -115,6 +130,9 @@ function nombresSeuls(){
 	problems.push(6);
 	return pwd.length;
 }
+
+
+/* Vérifie la répétition de certains caractères */
 
 function repetitionChar(){
 	var map = new Map();
@@ -136,6 +154,7 @@ function repetitionChar(){
 	return res*3;
 }
 
+/* Vérifie la présence de majuscules consécutives */
 
 function consecutiveMaj(){
 	var res=0;
@@ -156,6 +175,8 @@ function consecutiveMaj(){
 	return res*3;
 }
 
+/* Vérifie la présence de minuscules consécutives */
+
 function consecutiveMin(){
 	var res=0;
 	for(var i = 0 ; i < pwd.length; i++){
@@ -175,6 +196,8 @@ function consecutiveMin(){
 	return res*3;
 }
 
+/* Vérifie la présence de nombres consécutifs */
+
 function consecutiveNumber(){
 	var res=0;
 	for(var i = 0 ; i < pwd.length; i++){
@@ -192,6 +215,9 @@ function consecutiveNumber(){
 	return res*3;
 }
 
+/* Vérifie la présence du mot de passe sur un site listant les 
+mots de passes les plus fréquents */
+
 function doRequest(score){
 	$.ajax({
 		url: "https://api.pwnedpasswords.com/pwnedpassword/"+pwd,
@@ -208,6 +234,7 @@ function doRequest(score){
 
 }
 
+/* termine l'analyse en mettant le score sur 10 et en remplissant une jauge */
 
 function finAnalyse(score){
 	score = score/10;
